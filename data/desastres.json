@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "nombre": "Terremotos",
+    "descripcion": "Movimientos bruscos de la tierra causados por la liberación de energía acumulada en la corteza terrestre. Pueden ocasionar daños estructurales, colapsos de edificios y pérdida de vidas.",
+    "nivel_riesgo": "Moderado a alto"
+  },
+  {
+    "id": 2,
+    "nombre": "Inundaciones",
+    "descripcion": "Aumento significativo y rápido del nivel del agua en ríos, arroyos o áreas bajas debido a lluvias intensas o deshielo. Pueden provocar daños a propiedades, interrupciones en servicios básicos y desplazamiento de personas.",
+    "nivel_riesgo": "Moderado a alto"
+  },
+  {
+    "id": 3,
+    "nombre": "Deslizamientos de tierra",
+    "descripcion": "Movimiento de masa de tierra, rocas y escombros a lo largo de pendientes empinadas, generalmente desencadenados por lluvias intensas o sismos. Pueden destruir viviendas, bloquear carreteras y causar pérdida de vidas.",
+    "nivel_riesgo": "Moderado a alto"
+  },
+  {
+    "id": 4,
+    "nombre": "Sequías",
+    "descripcion": "Periodos prolongados con escasez de precipitaciones y falta de humedad en el suelo, lo que afecta la disponibilidad de agua, la agricultura y la ganadería.",
+    "nivel_riesgo": "Bajo a moderado"
+  },
+  {
+    "id": 5,
+    "nombre": "Aluviones",
+    "descripcion": "Flujos repentinos y violentos de agua, barro y rocas que descienden por las laderas de las montañas. Generalmente ocurren después de lluvias intensas en áreas montañosas, lo que puede causar daños estructurales y pérdidas de vidas.",
+    "nivel_riesgo": "Moderado a alto"
+  },
+  {
+    "id": 6,
+    "nombre": "Granizadas",
+    "descripcion": "Caída de granizo, que consiste en bolas de hielo de diferentes tamaños. Las granizadas pueden dañar cultivos, vehículos, techos y ventanas, y también pueden representar un riesgo para la salud en casos extremos.",
+    "nivel_riesgo": "Moderado"
+  },
+  {
+    "id": 7,
+    "nombre": "Heladas",
+    "descripcion": "Bajas temperaturas que provocan la congelación del agua en plantas, cultivos y sistemas de tuberías. Las heladas pueden dañar los cultivos, las infraestructuras y afectar el suministro de agua.",
+    "nivel_riesgo": "Moderado a alto"
+  }
+]

@@ -7,7 +7,6 @@ module com.example.proyectolab131 {
     requires com.dlsc.formsfx;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
-    requires eu.hansolo.tilesfx;
 
     opens com.example.proyectolab131 to javafx.fxml;
     exports com.example.proyectolab131;
