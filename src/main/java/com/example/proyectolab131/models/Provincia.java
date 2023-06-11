@@ -1,4 +1,4 @@
-package com.example.proyectolab131.model;
+package com.example.proyectolab131.models;
 
 public class Provincia {
     private int id;

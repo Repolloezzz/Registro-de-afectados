@@ -1,9 +1,19 @@
-package com.example.proyectolab131.structure;
+package com.example.proyectolab131.structures;
 
 public class NodoD<T> {
-    private T dato;
-    private NodoD<T> ant;
-    private NodoD<T> sig;
+    protected T dato;
+    protected NodoD<T> ant;
+    protected NodoD<T> sig;
+
+    public NodoD() {
+        dato = null;
+        ant = sig = null;
+    }
+
+    public NodoD(T dato) {
+        this.dato = dato;
+        ant = sig = null;
+    }
 
     public T getDato() {
         return dato;

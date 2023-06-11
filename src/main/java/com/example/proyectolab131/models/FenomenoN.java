@@ -1,12 +1,12 @@
-package com.example.proyectolab131.model;
+package com.example.proyectolab131.models;
 
-public class Desastre {
+public class FenomenoN {
     private int id;
     private String nombre;
     private String descripcion;
     private String nivel_riesgo;
 
-    public Desastre(int id, String nombre, String descripcion, String nivel_riesgo) {
+    public FenomenoN(int id, String nombre, String descripcion, String nivel_riesgo) {
         this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
