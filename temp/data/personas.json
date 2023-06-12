@@ -5,7 +5,7 @@
     "edad": 10,
     "genero": false,
     "esVivo": true,
-    "familiaId": -1
+    "familiaId": 123
   },
   {
     "ci": 94035210,
@@ -13,7 +13,7 @@
     "edad": 39,
     "genero": false,
     "esVivo": true,
-    "familiaId": 312
+    "familiaId": -1
   },
   {
     "ci": 95401533,

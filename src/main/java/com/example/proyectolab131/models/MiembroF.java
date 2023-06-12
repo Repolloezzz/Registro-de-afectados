@@ -1,6 +1,7 @@
 package com.example.proyectolab131.models;
 
 import com.example.proyectolab131.enums.TipoMiembroFamilia;
+import com.example.proyectolab131.persistence.ArchPersona;
 
 // Miembro familiar
 public class MiembroF {
@@ -31,5 +32,16 @@ public class MiembroF {
 
     public void setMiembroCI(int miembroCI) {
         this.miembroCI = miembroCI;
+    }
+
+    public Persona getPersona() {
+        ArchPersona arch = new ArchPersona();
+        return arch.getPersona(miembroCI);
+    }
+
+    public void mostrar() {
+        System.out.printf("""
+                ci: %s  \t tipo: %s
+                """, miembroCI, tipo);
     }
 }

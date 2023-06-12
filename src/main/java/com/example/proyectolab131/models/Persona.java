@@ -1,31 +1,52 @@
 package com.example.proyectolab131.models;
 
+import com.example.proyectolab131.persistence.ArchFamilia;
+
 public class Persona {
-    private Integer ci;
+    private int ci;
     private String nombre;
-    private Integer edad;
+    private int edad;
     private boolean genero;
     private boolean esVivo;
 
-    private Integer familiaId;
+    private int familiaId;
 
     public Persona() {
     }
 
-    public Persona(Integer ci, String nombre, Integer edad, boolean genero, boolean esVivo, Integer familiaId) {
+
+    public Persona(int ci, String nombre, int edad, boolean genero, boolean esVivo) {
         this.ci = ci;
         this.nombre = nombre;
         this.edad = edad;
         this.genero = genero;
         this.esVivo = esVivo;
-        this.familiaId = familiaId;
+        this.familiaId = -1;
     }
 
-    public Integer getCi() {
+    public Persona(int ci, String nombre, int edad, boolean genero, boolean esVivo, int familiaId) {
+        this.ci = ci;
+        this.nombre = nombre;
+        this.edad = edad;
+        this.genero = genero;
+        this.esVivo = esVivo;
+        ArchFamilia arch = new ArchFamilia();
+        Familia familia = arch.getFamilia(familiaId);
+        if (familia != null) {
+            this.familiaId = familiaId;
+            familia.agregarFin(ci);
+            arch.editarUno(familiaId, familia);
+        } else {
+            this.familiaId = -1;
+            System.out.println("No existe la familiaID indicada en la persistencia");
+        }
+    }
+
+    public int getCi() {
         return ci;
     }
 
-    public void setCi(Integer ci) {
+    public void setCi(int ci) {
         this.ci = ci;
     }
 
@@ -37,11 +58,11 @@ public class Persona {
         this.nombre = nombre;
     }
 
-    public Integer getEdad() {
+    public int getEdad() {
         return edad;
     }
 
-    public void setEdad(Integer edad) {
+    public void setEdad(int edad) {
         this.edad = edad;
     }
 
@@ -53,6 +74,11 @@ public class Persona {
         this.genero = genero;
     }
 
+    public String getGenero() {
+        // TRUE -> MASCULINO    || FALSE -> FEMENINO
+        return (genero) ? "masculino" : "femenino";
+    }
+
     public boolean isEsVivo() {
         return esVivo;
     }
@@ -61,11 +87,48 @@ public class Persona {
         this.esVivo = esVivo;
     }
 
-    public Integer getFamiliaId() {
+    public int getFamiliaId() {
         return familiaId;
     }
 
-    public void setFamiliaId(Integer familiaId) {
-        this.familiaId = familiaId;
+    public void setFamiliaId(int familiaId) {
+        ArchFamilia arch = new ArchFamilia();
+        Familia newFamilia = arch.getFamilia(familiaId);
+        if (newFamilia != null) {
+            Familia oldFamilia = getFamilia();
+            if (oldFamilia != null) {
+                oldFamilia.eliminarMiembro(ci);
+            }
+            newFamilia.agregarFin(ci);
+            this.familiaId = familiaId;
+        } else {
+            System.out.println("No existe la familiaID en la persistencia");
+        }
+    }
+
+    public void setFamiliaId(int familiaId, boolean forceProcess) {
+        if (forceProcess) {
+            this.familiaId = familiaId;
+        } else {
+            setFamiliaId(familiaId);
+        }
+    }
+
+    public Familia getFamilia() {
+        ArchFamilia arch = new ArchFamilia();
+        Familia familia = null;
+        if (familiaId != -1) {
+            familia = arch.getFamilia(familiaId);
+        }
+        return familia;
+    }
+
+    public void mostrar() {
+        System.out.printf("""
+                CI: %s
+                Nombre: %s
+                Edad: %s \t Genero: %s
+                Vivo?: %s \t FamiliaID: %s
+                """, ci, nombre, edad, getGenero(), esVivo, familiaId);
     }
 }

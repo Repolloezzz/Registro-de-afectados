@@ -18,4 +18,5 @@ module com.example.proyectolab131 {
     opens com.example.proyectolab131.models to com.google.gson;
     exports com.example.proyectolab131.persistence;
     opens com.example.proyectolab131.persistence to com.google.gson;
+    opens com.example.proyectolab131.structures to com.google.gson;
 }

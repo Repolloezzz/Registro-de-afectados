@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class LDNormal<T> implements Iterable<T> {
-    private NodoD<T> p;
-    private int nroEle;
+    protected NodoD<T> p;
+    protected int nroEle;
 
     public LDNormal() {
         p = null;
@@ -102,7 +102,7 @@ public class LDNormal<T> implements Iterable<T> {
         if (!esVacio()) {
             res = p.getDato();
             p = p.getSig();
-            p.setAnt(null);
+            if (p != null) p.setAnt(null);
         }
         return res;
     }
@@ -132,7 +132,15 @@ public class LDNormal<T> implements Iterable<T> {
         for (int i = 0; i < indexK; i++) {
             auxNodo = auxNodo.getSig();
         }
-        return auxNodo.getDato();
+        return (auxNodo == null) ? null : auxNodo.getDato();
+    }
+
+    public void setK(int indexK, T newData) {
+        NodoD<T> auxNodo = p;
+        for (int i = 0; i < indexK; i++) {
+            auxNodo = auxNodo.getSig();
+        }
+        auxNodo.setDato(newData);
     }
 
     public void mostrar() {
@@ -145,9 +153,9 @@ public class LDNormal<T> implements Iterable<T> {
 
     // 🏹 convertir lista normal a lista JAVA
     public List<T> ldnormalToList() {
-        List<T> list = new ArrayList<>();
+        ArrayList<T> list = new ArrayList<>();
         NodoD<T> auxNodo = p;
-        for (int i = 0; i < nroEle; i++) {
+        while (auxNodo != null) {
             list.add(auxNodo.getDato());
             auxNodo = auxNodo.getSig();
         }
