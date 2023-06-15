@@ -1,6 +1,6 @@
 package com.example.proyectolab131.persistence;
 
-import com.example.proyectolab131.models.Familia;
+import com.example.proyectolab131.enums.TipoMFamilia;
 import com.example.proyectolab131.models.Familia;
 import com.example.proyectolab131.models.Persona;
 import com.example.proyectolab131.structures.LDNormal;
@@ -15,20 +15,24 @@ import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ArchFamilia {
     private final String filePath;
+    private LDNormal<Familia> conjunto;
 
     public ArchFamilia() {
         filePath = "data/familias.json";
+        cargarDatos();
     }
 
     public ArchFamilia(String path) {
         filePath = path;
+        cargarDatos();
     }
 
-    public LDNormal<Familia> getTodo() {
+    private void cargarDatos() {
         Gson gson = new Gson();
         try (Reader reader = new FileReader(filePath)) {
             Type typeList = new TypeToken<List<Familia>>() {
@@ -36,13 +40,13 @@ public class ArchFamilia {
             List<Familia> listConverter = gson.fromJson(reader, typeList);
             LDNormal<Familia> listResponse = new LDNormal<>();
             listConverter.forEach(listResponse::agregarFin);
-            return listResponse;
+            conjunto = listResponse;
         } catch (IOException e) {
-            return null;
+            conjunto = new LDNormal<>();
         }
     }
 
-    public void setTodo(List<Familia> newData) {
+    private void setTodo(List<Familia> newData) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         Type listType = new TypeToken<List<Familia>>() {
         }.getType();
@@ -55,65 +59,141 @@ public class ArchFamilia {
         }
     }
 
-    public void setTodo(LDNormal<Familia> newData) {
+
+    private void setTodo(LDNormal<Familia> newData) {
         List<Familia> list = newData.ldnormalToList();
         setTodo(list);
     }
 
-    public void agregarUno(Familia dato) {
-        LDNormal<Familia> list = getTodo();
-        list.agregarFin(dato);
-        setTodo(list);
+    public LDNormal<Familia> getConjunto() {
+        return conjunto;
     }
 
-    public void editarUno(int id, Familia newData) {
-        LDNormal<Familia> list = getTodo();
-        for (int i = 0; i < list.nroEle(); i++) {
-            if (list.getK(i).getId() == id) {
-                list.setK(i, newData);
-            }
+    public LDNormal<Familia> getConjunto(Predicate<? super Familia> condicion) {
+        return conjunto.filter(condicion);
+    }
+
+
+    public int nroEle() {
+        return conjunto.nroEle();
+    }
+
+    public int nroEle(Predicate<? super Familia> condicion) {
+        return getConjunto(condicion).nroEle();
+    }
+
+    public void agregar(Familia data) {
+        if (getFamilia(data.getFamiliaId()) == null) {
+            conjunto.agregarFin(data);
+        } else {
+            System.out.println("La familia ya existe, mejor editela (ID)");
         }
-        setTodo(list);
+        setTodo(conjunto);
     }
 
-    public void editarUno(Familia newData) {
-        editarUno(newData.getId(), newData);
-    }
-
-    public void borrarUno(int id) {
-        LDNormal<Familia> list = getTodo();
+    public void editar(int id, Familia newData) {
+        LDNormal<Familia> list = conjunto;
         for (int i = 0; i < list.nroEle(); i++) {
-            Familia ele = list.getK(i);
-            if (ele.getId() == id) {
-                ArchPersona arch = new ArchPersona();
-                LDNormal<Persona> miembros = ele.getPersonas();
-                for (int j = 0; j < miembros.nroEle(); j++) {
-                    Persona miembro = miembros.getK(i);
-                    miembro.setFamiliaId(-1, true);
-                    arch.editarUno(miembro);
-                }
-                list.removerK(i);
+            if (list.getK(i).getFamiliaId() == id) {
+                list.setK(i, newData);
                 break;
             }
         }
         setTodo(list);
     }
 
-    public void listarTodo() {
-        LDNormal<Familia> list = getTodo();
-        System.out.println(">> Listando las personas en el archivo PERSONAS.JSON");
-        for (Familia ele : list) {
-            System.out.println(ele.getId());
-        }
+    public void editar(Familia newData) {
+        editar(newData.getFamiliaId(), newData);
     }
 
-    public Familia getFamilia(int id) {
-        LDNormal<Familia> list = getTodo();
-        for (Familia ele : list) {
-            if (ele.getId() == id) {
-                return ele;
+    public void borrar(int familiaId, ArchPersona arch) {
+        for (int i = 0; i < conjunto.nroEle(); i++) {
+            Familia ele = conjunto.getK(i);
+            if (ele.getFamiliaId() == familiaId) {
+                LDNormal<Integer> miembros = ele.getListMiembrosCi();
+                for (int j = 0; j < miembros.nroEle(); j++) {
+                    arch.cambiarFamilia(miembros.getK(i), familiaId, -1, this);
+                }
+                conjunto.removerK(i);
+                break;
             }
         }
-        return null;
+        setTodo(conjunto);
     }
+
+    public void listar() {
+        System.out.println(">> Listando las personas en el archivo PERSONAS.JSON");
+        System.out.println();
+        for (Familia ele : conjunto) {
+            ele.mostrar();
+        }
+        System.out.println(">>> " + conjunto.nroEle() + " elementos listados");
+    }
+
+    public void listar(Predicate<? super Familia> condicion) {
+        LDNormal<Familia> listFiltered = conjunto.filter(condicion);
+        System.out.printf(">> Datos del archivo persistente de PERSONA");
+        System.out.println();
+        for (Familia ele : listFiltered) {
+            ele.mostrar();
+        }
+        System.out.println(">>> " + listFiltered.nroEle() + " elementos listados");
+    }
+
+    public Familia getFamilia(int familiaId) {
+        Familia res = null;
+        for (int i = 0; i < nroEle(); i++) {
+            Familia ele = conjunto.getK(i);
+            if (ele.getFamiliaId() == familiaId) {
+                res = ele;
+                break;
+            }
+        }
+        return res;
+    }
+
+    public void agregarMiembro(int miembroCi, TipoMFamilia tipo, int familiaId, ArchPersona arch) {
+        Familia familia = getFamilia(familiaId);
+        if (familia != null) {
+            if (arch.getPersona(miembroCi) != null) {
+                familia.agregarFin(miembroCi, tipo);
+            } else {
+                System.out.println("No existe la persona con @ci: " + miembroCi);
+            }
+        } else {
+            System.out.println("No existe una familia con @familiaId: " + familiaId);
+        }
+        setTodo(conjunto);
+    }
+
+    public void agregarMiembro(int miembroCi, int familiaId, ArchPersona arch) {
+        agregarMiembro(miembroCi, TipoMFamilia.Indefinido, familiaId, arch);
+    }
+
+    public void agregarMiembro(Persona miembro, int familiaId, ArchPersona arch) {
+        Familia familia = getFamilia(familiaId);
+        if (familia != null) {
+            if (arch.getPersona(miembro.getCi()) != null) {
+                arch.agregar(miembro, this);
+                arch.cambiarFamilia(miembro.getCi(), -1, familiaId, this);
+            } else {
+                arch.cambiarFamilia(miembro.getCi(), miembro.getFamiliaId(), familiaId, this);
+            }
+        } else {
+            System.out.println("No existe una familia con @familiaId: " + familiaId);
+        }
+        setTodo(conjunto);
+    }
+
+    public void removeMiembro(int miembroCi, int familiaId, ArchPersona arch) {
+        Familia familia = getFamilia(familiaId);
+        if (familia != null) {
+            familia.removeMiembro(miembroCi);
+            arch.cambiarFamilia(miembroCi, -1, -1, this);
+        } else {
+            System.out.println(">> ! No existe ninguna familia con @familiaId: " + familiaId);
+        }
+        setTodo(conjunto);
+    }
+
 }

@@ -1,68 +1,78 @@
 package com.example.proyectolab131.models;
 
-import com.example.proyectolab131.persistence.ArchFamilia;
-
 public class Persona {
-    private int ci;
-    private String nombre;
-    private int edad;
+    private Integer ci;
+    private String nombres;
+    private String apellidos;
+    private Integer edad;
     private boolean genero;
     private boolean esVivo;
 
-    private int familiaId;
+    private Integer familiaId;
 
     public Persona() {
     }
 
 
-    public Persona(int ci, String nombre, int edad, boolean genero, boolean esVivo) {
+    public Persona(Integer ci, String nombres, String apellidos, Integer edad, boolean genero) {
         this.ci = ci;
-        this.nombre = nombre;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
+        this.edad = edad;
+        this.genero = genero;
+        this.familiaId = -1;
+    }
+
+    public Persona(Integer ci, String nombres, String apellidos, Integer edad, boolean genero, boolean esVivo) {
+        this.ci = ci;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
         this.edad = edad;
         this.genero = genero;
         this.esVivo = esVivo;
         this.familiaId = -1;
     }
 
-    public Persona(int ci, String nombre, int edad, boolean genero, boolean esVivo, int familiaId) {
+    public Persona(Integer ci, String nombres, String apellidos, Integer edad, boolean genero, boolean esVivo, Integer familiaId) {
         this.ci = ci;
-        this.nombre = nombre;
+        this.nombres = nombres;
+        this.apellidos = apellidos;
         this.edad = edad;
         this.genero = genero;
         this.esVivo = esVivo;
-        ArchFamilia arch = new ArchFamilia();
-        Familia familia = arch.getFamilia(familiaId);
-        if (familia != null) {
-            this.familiaId = familiaId;
-            familia.agregarFin(ci);
-            arch.editarUno(familiaId, familia);
-        } else {
-            this.familiaId = -1;
-            System.out.println("No existe la familiaID indicada en la persistencia");
-        }
+        this.familiaId = familiaId;
     }
 
-    public int getCi() {
+    public Integer getCi() {
         return ci;
     }
 
-    public void setCi(int ci) {
+    public void setCi(Integer ci) {
         this.ci = ci;
     }
 
-    public String getNombre() {
-        return nombre;
+
+    public String getNombres() {
+        return nombres;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNombres(String nombress) {
+        this.nombres = nombress;
     }
 
-    public int getEdad() {
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellido) {
+        this.apellidos = apellido;
+    }
+
+    public Integer getEdad() {
         return edad;
     }
 
-    public void setEdad(int edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
     }
 
@@ -79,7 +89,7 @@ public class Persona {
         return (genero) ? "masculino" : "femenino";
     }
 
-    public boolean isEsVivo() {
+    public boolean esVivo() {
         return esVivo;
     }
 
@@ -87,48 +97,21 @@ public class Persona {
         this.esVivo = esVivo;
     }
 
-    public int getFamiliaId() {
+    public Integer getFamiliaId() {
         return familiaId;
     }
 
-    public void setFamiliaId(int familiaId) {
-        ArchFamilia arch = new ArchFamilia();
-        Familia newFamilia = arch.getFamilia(familiaId);
-        if (newFamilia != null) {
-            Familia oldFamilia = getFamilia();
-            if (oldFamilia != null) {
-                oldFamilia.eliminarMiembro(ci);
-            }
-            newFamilia.agregarFin(ci);
-            this.familiaId = familiaId;
-        } else {
-            System.out.println("No existe la familiaID en la persistencia");
-        }
+    public void setFamiliaId(Integer familiaId) {
+        this.familiaId = familiaId;
     }
 
-    public void setFamiliaId(int familiaId, boolean forceProcess) {
-        if (forceProcess) {
-            this.familiaId = familiaId;
-        } else {
-            setFamiliaId(familiaId);
-        }
-    }
-
-    public Familia getFamilia() {
-        ArchFamilia arch = new ArchFamilia();
-        Familia familia = null;
-        if (familiaId != -1) {
-            familia = arch.getFamilia(familiaId);
-        }
-        return familia;
-    }
 
     public void mostrar() {
         System.out.printf("""
                 CI: %s
-                Nombre: %s
+                Nombres: %s \t Apellidos: %s
                 Edad: %s \t Genero: %s
                 Vivo?: %s \t FamiliaID: %s
-                """, ci, nombre, edad, getGenero(), esVivo, familiaId);
+                """, ci, nombres, apellidos, edad, getGenero(), esVivo, familiaId);
     }
 }

@@ -1,159 +1,94 @@
 package com.example.proyectolab131.models;
 
-import com.example.proyectolab131.enums.TipoMiembroFamilia;
-import com.example.proyectolab131.persistence.ArchFamilia;
-import com.example.proyectolab131.persistence.ArchPersona;
+import com.example.proyectolab131.enums.TipoMFamilia;
 import com.example.proyectolab131.structures.LDNormal;
 
 
 public class Familia extends LDNormal<MiembroF> {
-    private int id;
+    private Integer familiaId;
 
-    public Familia(int ci, int id) {
+    public Familia(Integer familiaId) {
         super();
-        ArchPersona arch = new ArchPersona();
-        Persona miembro = arch.getPersona(ci);
-        if (miembro != null) {
-            miembro.setFamiliaId(id);
-            arch.editarUno(miembro.getCi(), miembro);
-            agregarFin(new MiembroF(ci));
-        }
-        this.id = id;
+        this.familiaId = familiaId;
     }
 
-    public Familia(int ci, TipoMiembroFamilia tipo, int id) {
+    public Familia(Integer miembroCi, Integer familiaId) {
         super();
-        ArchPersona arch = new ArchPersona();
-        Persona miembro = arch.getPersona(ci);
-        if (miembro != null) {
-            miembro.setFamiliaId(id);
-            arch.editarUno(miembro.getCi(), miembro);
-            agregarFin(new MiembroF(ci, tipo));
-        }
-        this.id = id;
+        this.familiaId = familiaId;
+        agregarFin(new MiembroF(miembroCi));
     }
 
-    public Familia(Persona familiar, int id) {
+    public Familia(Integer miembroCi, TipoMFamilia tipo, Integer familiaId) {
         super();
-        ArchPersona arch = new ArchPersona();
-        Persona miembro = arch.getPersona(familiar.getCi());
-        if (miembro != null) {
-            miembro.setFamiliaId(id, true);
-            arch.editarUno(miembro.getCi(), miembro);
-            agregarFin(new MiembroF(miembro.getCi()));
-        }
-        this.id = id;
+        this.familiaId = familiaId;
+        agregarFin(new MiembroF(miembroCi, tipo));
     }
 
-    public Familia(Persona familiar, TipoMiembroFamilia tipo, int id) {
+    public Familia(MiembroF miembro, Integer familiaId) {
         super();
-        ArchPersona arch = new ArchPersona();
-        Persona miembro = arch.getPersona(familiar.getCi());
-        if (miembro != null) {
-            miembro.setFamiliaId(id);
-            arch.editarUno(miembro.getCi(), miembro);
-            agregarFin(new MiembroF(miembro.getCi(), tipo));
-        }
-        this.id = id;
+        this.familiaId = familiaId;
+        agregarFin(miembro);
     }
 
-    public void agregarFin(int ci) {
-        ArchPersona arch = new ArchPersona();
-        Persona miembro = arch.getPersona(ci);
-        if (miembro != null) {
-            boolean sw = true;
-            for (int i = 0; i < nroEle(); i++) {
-                if (getK(i).getMiembroCI() == ci) {
-                    sw = false;
-                    break;
-                }
-            }
-            if (sw) {
-                agregarFin(new MiembroF(ci));
-            } else {
-                System.out.println("El miembro ya existe en la familia");
-            }
-        } else {
-            System.out.println("La persona indicada no es persistente");
-        }
+    public Integer getFamiliaId() {
+        return familiaId;
     }
 
-    public void agregarFin(int ci, TipoMiembroFamilia tipo) {
-        ArchPersona arch = new ArchPersona();
-        Persona miembro = arch.getPersona(ci);
-        if (miembro != null) {
-            boolean sw = true;
-            for (int i = 0; i < nroEle(); i++) {
-                if (getK(i).getMiembroCI() == ci) {
-                    sw = false;
-                    break;
-                }
-            }
-            if (sw) {
-                agregarFin(new MiembroF(ci, tipo));
-            } else {
-                System.out.println("El miembro ya existe en la familia");
-            }
-        } else {
-            System.out.println("La persona indeicada no es persistente");
-        }
+    public void setFamiliaId(Integer familiaId) {
+        this.familiaId = familiaId;
     }
 
-    public void agregarFin(Persona miembro) {
-        agregarFin(miembro.getCi());
-    }
-
-    public void agregarFin(Persona miembro, TipoMiembroFamilia tipo) {
-        agregarFin(miembro.getCi(), tipo);
-    }
-
-    public MiembroF eliminarMiembro(int ci) {
-        MiembroF response = null;
-        for (int i = 0; i < nroEle(); i++) {
-            MiembroF miembro = getK(i);
-            if (miembro.getMiembroCI() == ci) {
-                response = removerK(i);
+    public MiembroF getMiembro(Integer miembroCi) {
+        MiembroF res = null;
+        for (int i = 0; i < nroEle; i++) {
+            MiembroF ele = getK(i);
+            if (ele.getMiembroCi().equals(miembroCi)) {
+                res = ele;
                 break;
             }
         }
-        nroEle--;
-        return response;
+        return res;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        ArchFamilia arch = new ArchFamilia();
-        Familia fam = arch.getFamilia(id);
-        if (fam == null) {
-            this.id = id;
-        } else {
-            System.out.printf("El ID de la familia nueva ya existe");
+    public MiembroF removeMiembro(Integer miembroCi) {
+        MiembroF res = null;
+        for (int i = 0; i < nroEle; i++) {
+            MiembroF ele = getK(i);
+            if (ele.getMiembroCi().equals(miembroCi)) {
+                res = removerK(i);
+                nroEle--;
+                break;
+            }
         }
+        return res;
+    }
+
+    public void agregarFin(Integer ci, TipoMFamilia tipo) {
+        if (getMiembro(ci) == null) {
+            agregarFin(new MiembroF(ci, tipo));
+        } else {
+            System.out.println("El miembro ya existe");
+        }
+    }
+
+    public void agregarFin(Integer ci) {
+        agregarFin(ci, TipoMFamilia.Indefinido);
+    }
+
+    public LDNormal<Integer> getListMiembrosCi() {
+        LDNormal<Integer> listRes = new LDNormal<>();
+        for (MiembroF ele : this) {
+            listRes.agregarFin(ele.getMiembroCi());
+        }
+        return listRes;
     }
 
     public void mostrar() {
-        System.out.printf("ID: %s\n", id);
-        for (int i = 0; i < nroEle(); i++) {
-            MiembroF ele = getK(i);
+        System.out.println("@Familia: " + familiaId);
+        System.out.println();
+        for (MiembroF ele : this) {
             ele.mostrar();
         }
-    }
-
-    public LDNormal<Persona> getPersonas() {
-        LDNormal<Persona> listResult = new LDNormal<>();
-        for (int i = 0; i < nroEle(); i++) {
-            MiembroF miembro = getK(i);
-            Persona persona = miembro.getPersona();
-            if (persona == null) {
-                removerK(i);
-                i--;
-            } else {
-                listResult.agregarFin(persona);
-            }
-        }
-        return listResult;
+        System.out.println(nroEle + " elementos listados");
     }
 }

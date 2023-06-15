@@ -3,6 +3,7 @@ package com.example.proyectolab131.structures;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class LDNormal<T> implements Iterable<T> {
     protected NodoD<T> p;
@@ -182,5 +183,15 @@ public class LDNormal<T> implements Iterable<T> {
             current = current.getSig();
             return dato;
         }
+    }
+
+    public LDNormal<T> filter(Predicate<? super T> condicion) {
+        LDNormal<T> listReponse = new LDNormal<>();
+        for (T ele : this) {
+            if (condicion.test(ele)) {
+                listReponse.agregarFin(ele);
+            }
+        }
+        return listReponse;
     }
 }

@@ -1,47 +1,41 @@
 package com.example.proyectolab131.models;
 
-import com.example.proyectolab131.enums.TipoMiembroFamilia;
-import com.example.proyectolab131.persistence.ArchPersona;
+import com.example.proyectolab131.enums.TipoMFamilia;
 
-// Miembro familiar
 public class MiembroF {
-    private TipoMiembroFamilia tipo;
-    private int miembroCI;
+    private Integer miembroCi;
+    private TipoMFamilia tipo;
 
-    public MiembroF(int miembroCI, TipoMiembroFamilia tipo) {
+    public MiembroF(Integer miembroCi) {
+        this.miembroCi = miembroCi;
+        this.tipo = TipoMFamilia.Indefinido;
+    }
+
+    public MiembroF(Integer miembroCi, TipoMFamilia tipo) {
+        this.miembroCi = miembroCi;
         this.tipo = tipo;
-        this.miembroCI = miembroCI;
     }
 
-    public MiembroF(int miembroCI) {
-        this.miembroCI = miembroCI;
-        this.tipo = TipoMiembroFamilia.Indefinido;
+    public Integer getMiembroCi() {
+        return miembroCi;
     }
 
-    public TipoMiembroFamilia getTipo() {
+    public void setMiembroCi(Integer miembroCi) {
+        this.miembroCi = miembroCi;
+    }
+
+    public TipoMFamilia getTipo() {
         return tipo;
     }
 
-    public void setTipo(TipoMiembroFamilia tipo) {
+    public void setTipo(TipoMFamilia tipo) {
         this.tipo = tipo;
-    }
-
-    public int getMiembroCI() {
-        return miembroCI;
-    }
-
-    public void setMiembroCI(int miembroCI) {
-        this.miembroCI = miembroCI;
-    }
-
-    public Persona getPersona() {
-        ArchPersona arch = new ArchPersona();
-        return arch.getPersona(miembroCI);
     }
 
     public void mostrar() {
         System.out.printf("""
-                ci: %s  \t tipo: %s
-                """, miembroCI, tipo);
+                MiembroCI: %s
+                Rol Familiar: %s
+                """, miembroCi, tipo);
     }
 }

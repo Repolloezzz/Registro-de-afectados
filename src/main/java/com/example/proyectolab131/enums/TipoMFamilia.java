@@ -1,6 +1,6 @@
 package com.example.proyectolab131.enums;
 
-public enum TipoMiembroFamilia {
+public enum TipoMFamilia {
     Padre,
     Madre,
     Hijo,
