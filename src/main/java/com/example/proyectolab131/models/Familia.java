@@ -76,6 +76,7 @@ public class Familia implements Serializable {
         while (nodo != null) {
             if (nodo.getDato().getCi() == ci) {
                 res = nodo.getDato();
+                break;
             }
             nodo = nodo.getSig();
             index++;
@@ -90,6 +91,24 @@ public class Familia implements Serializable {
             list.agregarFin(ele.getCi());
         }
         return list;
+    }
+
+    public boolean editarMiembro(int ci, MiembroF data) {
+        boolean res = false;
+        if (contiene(ci)) {
+            NodoD<MiembroF> nodo = miembros.getP();
+            while (nodo != null) {
+                if (nodo.getDato().getCi() == ci) {
+                    nodo.setDato(data);
+                    res = true;
+                    break;
+                }
+                nodo = nodo.getSig();
+            }
+        } else {
+            System.out.printf("El miembro no existe; @ci: " + ci);
+        }
+        return res;
     }
 
     public void mostrar() {

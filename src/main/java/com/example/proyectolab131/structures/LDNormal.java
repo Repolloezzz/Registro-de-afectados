@@ -23,6 +23,10 @@ public class LDNormal<T> implements Iterable<T>, Serializable {
         return nroEle;
     }
 
+    public int nroEle(Predicate<? super T> filtro) {
+        return this.filter(filtro).nroEle();
+    }
+
     public NodoD<T> getP() {
         return p;
     }

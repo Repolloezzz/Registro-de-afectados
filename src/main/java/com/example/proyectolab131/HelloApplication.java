@@ -1,6 +1,5 @@
 package com.example.proyectolab131;
 
-import com.example.proyectolab131.models.Familia;
 import com.example.proyectolab131.models.Persona;
 import com.example.proyectolab131.models.RegPersonas;
 import com.example.proyectolab131.structures.LDNormal;
@@ -38,11 +37,11 @@ public class HelloApplication extends Application {
         alguien.mostrar();
         // Obtener su familia y mostrarlo
         System.out.println(">> Mostrar familia de alguien");
-        Familia famAlguien = reg.getFamilia(alguien.getFamiliaId());
-        LDNormal<Integer> miembrosCI = famAlguien.getMiembrosCI();
+        LDNormal<Integer> miembrosCI = reg.getFamilia(alguien.getFamiliaId()).getMiembrosCI();
         for (Integer ci : miembrosCI) {
             reg.getPersona(ci).mostrar();
         }
+        System.out.println(">> Existen " + reg.nroFamilias(familia -> familia.nroMiembros() == 3) + " familias con 3 miembros exactos");
 
     }
 
