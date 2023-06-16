@@ -1,6 +1,9 @@
 package com.example.proyectolab131;
 
-import com.example.proyectolab131.persistence.ArchPersona;
+import com.example.proyectolab131.models.Familia;
+import com.example.proyectolab131.models.Persona;
+import com.example.proyectolab131.models.RegPersonas;
+import com.example.proyectolab131.structures.LDNormal;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,12 +18,32 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1280, 720);
-        // Cambiar icono y titulo de la ventana
-        Image icon = new Image(getClass().getResourceAsStream("/static/icon.png"));
+        // Cambiar icono y título de la ventana
+        // Imagenes en el paquete src/main/resources
+        Image icon = new Image("/static/icon.png");
         stage.getIcons().add(icon);
         stage.setTitle("Sistema de desastres naturales");
         stage.setScene(scene);
-        stage.show();
+
+        // Pruebas, Por defecto utiliza los archivos en /data
+        RegPersonas reg = new RegPersonas();
+
+        // Listar todas las personas de sexo masculino; TRUE = HOMBRE
+        // Además deben de ser mayores de 60 años
+        reg.listarPersona(persona -> persona.isGenero() && persona.getEdad() > 60);
+
+        // Obtener una persona del registro
+        System.out.println(">> Mostrando una persona cualquiera");
+        Persona alguien = reg.getPersona(98509695);
+        alguien.mostrar();
+        // Obtener su familia y mostrarlo
+        System.out.println(">> Mostrar familia de alguien");
+        Familia famAlguien = reg.getFamilia(alguien.getFamiliaId());
+        LDNormal<Integer> miembrosCI = famAlguien.getMiembrosCI();
+        for (Integer ci : miembrosCI) {
+            reg.getPersona(ci).mostrar();
+        }
+
     }
 
     public static void main(String[] args) {

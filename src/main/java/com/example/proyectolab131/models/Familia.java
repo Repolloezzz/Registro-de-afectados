@@ -1,94 +1,111 @@
 package com.example.proyectolab131.models;
 
-import com.example.proyectolab131.enums.TipoMFamilia;
+import com.example.proyectolab131.others.TipoMFamilia;
 import com.example.proyectolab131.structures.LDNormal;
+import com.example.proyectolab131.structures.NodoD;
 
+import java.io.Serializable;
+import java.util.function.Predicate;
 
-public class Familia extends LDNormal<MiembroF> {
-    private Integer familiaId;
+public class Familia implements Serializable {
+    // Identificador para la familia
+    private int familiaId;
+    private LDNormal<MiembroF> miembros;
 
-    public Familia(Integer familiaId) {
-        super();
+    public Familia(int familiaId) {
         this.familiaId = familiaId;
+        miembros = new LDNormal<>();
     }
 
-    public Familia(Integer miembroCi, Integer familiaId) {
-        super();
+    public Familia(int familiaId, int ci) {
         this.familiaId = familiaId;
-        agregarFin(new MiembroF(miembroCi));
+        miembros = new LDNormal<>();
+        agregarMiembro(ci, TipoMFamilia.Indefinido);
     }
 
-    public Familia(Integer miembroCi, TipoMFamilia tipo, Integer familiaId) {
-        super();
+    public Familia(int familiaId, int ci, TipoMFamilia rol) {
         this.familiaId = familiaId;
-        agregarFin(new MiembroF(miembroCi, tipo));
+        miembros = new LDNormal<>();
+        agregarMiembro(ci, rol);
     }
 
-    public Familia(MiembroF miembro, Integer familiaId) {
-        super();
-        this.familiaId = familiaId;
-        agregarFin(miembro);
-    }
-
-    public Integer getFamiliaId() {
+    public int getFamiliaId() {
         return familiaId;
     }
 
-    public void setFamiliaId(Integer familiaId) {
+    public void setFamiliaId(int familiaId) {
         this.familiaId = familiaId;
     }
 
-    public MiembroF getMiembro(Integer miembroCi) {
-        MiembroF res = null;
-        for (int i = 0; i < nroEle; i++) {
-            MiembroF ele = getK(i);
-            if (ele.getMiembroCi().equals(miembroCi)) {
-                res = ele;
-                break;
-            }
-        }
-        return res;
+    public boolean contiene(int ci) {
+        return miembros.contiene(ele -> ele.getCi() == ci);
     }
 
-    public MiembroF removeMiembro(Integer miembroCi) {
-        MiembroF res = null;
-        for (int i = 0; i < nroEle; i++) {
-            MiembroF ele = getK(i);
-            if (ele.getMiembroCi().equals(miembroCi)) {
-                res = removerK(i);
-                nroEle--;
-                break;
-            }
-        }
-        return res;
+    public int nroMiembros() {
+        return miembros.nroEle();
     }
 
-    public void agregarFin(Integer ci, TipoMFamilia tipo) {
-        if (getMiembro(ci) == null) {
-            agregarFin(new MiembroF(ci, tipo));
+    public int nroMiembros(Predicate<? super MiembroF> filtro) {
+        return miembros.filter(filtro).nroEle();
+    }
+
+    public MiembroF getMiembro(int ci) {
+        for (MiembroF ele : miembros) {
+            if (ele.getCi() == ci) {
+                return ele;
+            }
+        }
+        return null;
+    }
+
+    public boolean agregarMiembro(int ci, TipoMFamilia rol) {
+        boolean res = false;
+        if (!contiene(ci)) {
+            miembros.agregarFin(new MiembroF(ci, rol));
+            res = true;
         } else {
-            System.out.println("El miembro ya existe");
+            System.out.printf("El miembro ya existe; @ci: " + ci);
         }
+        return res;
     }
 
-    public void agregarFin(Integer ci) {
-        agregarFin(ci, TipoMFamilia.Indefinido);
+    public MiembroF removerMiembro(int ci) {
+        MiembroF res = null;
+        NodoD<MiembroF> nodo = miembros.getP();
+        int index = 0;
+        while (nodo != null) {
+            if (nodo.getDato().getCi() == ci) {
+                res = nodo.getDato();
+            }
+            nodo = nodo.getSig();
+            index++;
+        }
+        miembros.removerK(index);
+        return res;
     }
 
-    public LDNormal<Integer> getListMiembrosCi() {
-        LDNormal<Integer> listRes = new LDNormal<>();
-        for (MiembroF ele : this) {
-            listRes.agregarFin(ele.getMiembroCi());
+    public LDNormal<Integer> getMiembrosCI() {
+        LDNormal<Integer> list = new LDNormal<>();
+        for (MiembroF ele : miembros) {
+            list.agregarFin(ele.getCi());
         }
-        return listRes;
+        return list;
     }
 
     public void mostrar() {
-        System.out.println("@Familia: " + familiaId);
-        System.out.println();
-        for (MiembroF ele : this) {
+        System.out.println("@familiaId: " + familiaId);
+        for (MiembroF ele : miembros) {
             ele.mostrar();
         }
-        System.out.println(nroEle + " elementos listados");
+        System.out.println("?? " + nroMiembros() + " Elementos listados");
+    }
+
+    public void mostrar(Predicate<? super MiembroF> filtro) {
+        LDNormal<MiembroF> listFiltred = miembros.filter(filtro);
+        System.out.println("@familiaId: " + familiaId);
+        for (MiembroF ele : listFiltred) {
+            ele.mostrar();
+        }
+        System.out.println("?? " + listFiltred.nroEle() + " Elementos listados");
     }
 }

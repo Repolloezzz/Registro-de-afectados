@@ -1,11 +1,12 @@
 package com.example.proyectolab131.structures;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class LDNormal<T> implements Iterable<T> {
+public class LDNormal<T> implements Iterable<T>, Serializable {
     protected NodoD<T> p;
     protected int nroEle;
 
@@ -126,6 +127,28 @@ public class LDNormal<T> implements Iterable<T> {
             System.out.println("El index esta fuera de rango");
             return null;
         }
+    }
+
+    public boolean contiene(T dato) {
+        NodoD<T> aux = p;
+        while (aux != null) {
+            if (aux.getDato().equals(dato)) {
+                return true;
+            }
+            aux = aux.getSig();
+        }
+        return false;
+    }
+
+    public boolean contiene(Predicate<? super T> condicion) {
+        NodoD<T> aux = p;
+        while (aux != null) {
+            if (condicion.test(aux.getDato())) {
+                return true;
+            }
+            aux = aux.getSig();
+        }
+        return false;
     }
 
     public T getK(int indexK) {

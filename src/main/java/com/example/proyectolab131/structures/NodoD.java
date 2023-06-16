@@ -1,6 +1,8 @@
 package com.example.proyectolab131.structures;
 
-public class NodoD<T> {
+import java.io.Serializable;
+
+public class NodoD<T> implements Serializable {
     protected T dato;
     protected NodoD<T> ant;
     protected NodoD<T> sig;

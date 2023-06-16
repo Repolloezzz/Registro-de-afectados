@@ -1,41 +1,44 @@
 package com.example.proyectolab131.models;
 
-import com.example.proyectolab131.enums.TipoMFamilia;
+import com.example.proyectolab131.others.TipoMFamilia;
 
-public class MiembroF {
-    private Integer miembroCi;
-    private TipoMFamilia tipo;
+import java.io.Serializable;
 
-    public MiembroF(Integer miembroCi) {
-        this.miembroCi = miembroCi;
-        this.tipo = TipoMFamilia.Indefinido;
+public class MiembroF implements Serializable {
+    // Enlace de la familia con una persona
+    private int ci;
+    // Rol familiar que cumple la persona en la familia
+    private TipoMFamilia rol;
+
+    MiembroF(int ci) {
+        this.ci = ci;
+        this.rol = TipoMFamilia.Indefinido;
     }
 
-    public MiembroF(Integer miembroCi, TipoMFamilia tipo) {
-        this.miembroCi = miembroCi;
-        this.tipo = tipo;
+    public MiembroF(int ci, TipoMFamilia rol) {
+        this.ci = ci;
+        this.rol = rol;
     }
 
-    public Integer getMiembroCi() {
-        return miembroCi;
+    public int getCi() {
+        return ci;
     }
 
-    public void setMiembroCi(Integer miembroCi) {
-        this.miembroCi = miembroCi;
+    public void setCi(int ci) {
+        this.ci = ci;
     }
 
-    public TipoMFamilia getTipo() {
-        return tipo;
+    public TipoMFamilia getRol() {
+        return rol;
     }
 
-    public void setTipo(TipoMFamilia tipo) {
-        this.tipo = tipo;
+    public void setRol(TipoMFamilia rol) {
+        this.rol = rol;
     }
 
     public void mostrar() {
         System.out.printf("""
-                MiembroCI: %s
-                Rol Familiar: %s
-                """, miembroCi, tipo);
+                @CI: %s \t Rol: %s
+                """, ci, rol);
     }
 }
